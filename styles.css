@@ -804,7 +804,7 @@ h3 {
 
 @media (max-width: 760px) {
   .shell {
-    width: min(100% - 40px, 1120px);
+    width: min(100% - 32px, 1120px);
   }
 
   .nav {
@@ -866,16 +866,47 @@ h3 {
     margin-top: 24px;
   }
 
-  .stats-grid,
-  .service-grid,
-  .timeline,
   .trust-inner,
+  .stats-grid,
   .case-study-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-grid,
+  .timeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-card,
+  .stats-grid article,
+  .case-study-card,
+  .timeline article {
+    padding: 20px;
+  }
+
+  .service-grid-detailed .service-card,
+  .stats-grid article,
+  .case-study-card,
+  .timeline article {
+    min-height: 0;
+  }
+
+  .service-card h3,
+  .case-study-card h3,
+  .timeline h3,
+  .stats-grid strong {
+    font-size: 1rem;
+  }
+
+  .service-card p,
+  .case-study-summary,
+  .timeline p,
+  .stats-grid p {
+    font-size: 0.9rem;
   }
 
   .section {
-    padding: 86px 0;
+    padding: 72px 0;
   }
 
   .timeline article {
@@ -892,6 +923,18 @@ h3 {
 
   .closed-card {
     min-height: 520px;
+  }
+
+  .footer-inner {
+    gap: 20px;
+  }
+
+  .footer-nav {
+    gap: 16px;
+  }
+
+  .footer-contact {
+    gap: 14px;
   }
 }
 
