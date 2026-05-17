@@ -99,17 +99,12 @@ if (revealBlocks.length || revealItems.length) {
     const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) {
-            return;
-          }
-
-          entry.target.classList.add("reveal-active");
-          revealObserver.unobserve(entry.target);
+          entry.target.classList.toggle("reveal-active", entry.isIntersecting);
         });
       },
       {
-        rootMargin: "0px 0px -12% 0px",
-        threshold: 0.14,
+        rootMargin: "0px 0px -10% 0px",
+        threshold: 0.2,
       }
     );
 
