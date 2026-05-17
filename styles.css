@@ -80,10 +80,10 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(247, 250, 252, 0.62);
-  border-bottom: 1px solid rgba(16, 50, 74, 0.1);
-  box-shadow: 0 12px 34px rgba(16, 33, 51, 0.08);
-  backdrop-filter: blur(18px);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .nav {
@@ -289,9 +289,8 @@ h3 {
 
 .trust-strip {
   padding: 28px 0;
-  background: rgba(255, 255, 255, 0.72);
-  border-block: 1px solid var(--line);
-  backdrop-filter: blur(10px);
+  background: transparent;
+  border-block: 1px solid transparent;
 }
 
 .trust-inner {
@@ -460,8 +459,8 @@ h3 {
 
 .process-section {
   width: 100%;
-  background: #edf4f8;
-  border-block: 1px solid var(--line);
+  background: transparent;
+  border-block: 1px solid transparent;
 }
 
 .timeline {
@@ -497,7 +496,7 @@ h3 {
 
 .cta-section {
   padding: 112px 0;
-  background: linear-gradient(135deg, rgba(223, 243, 255, 0.96) 0%, #f6f9fb 48%, #e9eef3 100%);
+  background: transparent;
 }
 
 .cta-inner {
@@ -520,11 +519,9 @@ h3 {
 .footer {
   padding: 40px 0;
   color: var(--footer-text);
-  background:
-    linear-gradient(180deg, rgba(247, 250, 252, 0.86), rgba(238, 245, 249, 0.9)),
-    #f7fafc;
-  border-top: 1px solid var(--footer-line);
-  backdrop-filter: blur(10px);
+  background: transparent;
+  border-top: 1px solid transparent;
+  backdrop-filter: none;
 }
 
 .footer-inner {
@@ -829,10 +826,11 @@ h3 {
     align-items: stretch;
     gap: 0;
     padding: 12px;
-    background: rgba(247, 250, 252, 0.96);
-    border: 1px solid rgba(16, 50, 74, 0.14);
+    background: rgba(247, 250, 252, 0.78);
+    border: 1px solid rgba(16, 50, 74, 0.1);
     border-radius: 8px;
-    box-shadow: 0 20px 44px rgba(16, 33, 51, 0.12);
+    box-shadow: 0 20px 44px rgba(16, 33, 51, 0.08);
+    backdrop-filter: blur(10px);
   }
 
   .nav-links.is-open {
