@@ -9,8 +9,8 @@ let authRoots = document.querySelectorAll("[data-auth-root]");
 const scrollOffset = 96;
 const pendingScrollKey = "cloudmgmt-scroll-target";
 const supabaseConfig = window.CLOUDMGMT_SUPABASE || {
-  url: "https://YOUR_PROJECT_REF.supabase.co",
-  anonKey: "YOUR_SUPABASE_ANON_KEY",
+  url: "https://zzsnnbpzncnhdsludhet.supabase.co",
+  anonKey: "sb_publishable_lIlj5ER0FDbkPoa2vWVP4w_L2CqnMoY",
 };
 let scrollGridFrame = 0;
 let authMode = "login";
