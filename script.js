@@ -5,8 +5,13 @@ const samePageScrollLinks = document.querySelectorAll("[data-scroll-target]");
 const crossPageScrollLinks = document.querySelectorAll("[data-route-scroll]");
 const revealBlocks = document.querySelectorAll("[data-reveal]");
 const revealItems = document.querySelectorAll("[data-reveal-item]");
+const authRoots = document.querySelectorAll("[data-auth-root]");
 const scrollOffset = 96;
 const pendingScrollKey = "cloudmgmt-scroll-target";
+const supabaseConfig = window.CLOUDMGMT_SUPABASE || {};
+let scrollGridFrame = 0;
+let authMode = "login";
+let supabaseClient = null;
 
 function closeNavMenu() {
   if (!navToggle || !navLinks) {
@@ -40,6 +45,49 @@ function clearHashFromAddress() {
   window.history.replaceState({}, "", window.location.pathname + window.location.search);
 }
 
+function resetScrollGrid() {
+  const rootStyle = document.documentElement.style;
+
+  rootStyle.setProperty("--grid-scroll-x", "0px");
+  rootStyle.setProperty("--grid-scroll-y", "0px");
+  rootStyle.setProperty("--hero-grid-scroll-x", "0px");
+  rootStyle.setProperty("--hero-grid-scroll-y", "0px");
+  rootStyle.setProperty("--grid-opacity", "0.72");
+  rootStyle.setProperty("--hero-grid-opacity", "0.9");
+}
+
+function updateScrollGrid() {
+  scrollGridFrame = 0;
+
+  if (reduceMotion.matches) {
+    resetScrollGrid();
+    return;
+  }
+
+  const scrollY = window.scrollY;
+  const rootStyle = document.documentElement.style;
+  const gridX = Math.round(scrollY * -0.018);
+  const gridY = Math.round(scrollY * 0.052);
+  const heroX = Math.round(scrollY * 0.034);
+  const heroY = Math.round(scrollY * -0.024);
+  const opacityShift = Math.min(0.12, scrollY / 9000);
+
+  rootStyle.setProperty("--grid-scroll-x", `${gridX}px`);
+  rootStyle.setProperty("--grid-scroll-y", `${gridY}px`);
+  rootStyle.setProperty("--hero-grid-scroll-x", `${heroX}px`);
+  rootStyle.setProperty("--hero-grid-scroll-y", `${heroY}px`);
+  rootStyle.setProperty("--grid-opacity", String(0.72 - opacityShift));
+  rootStyle.setProperty("--hero-grid-opacity", String(0.9 - opacityShift));
+}
+
+function requestScrollGridUpdate() {
+  if (scrollGridFrame) {
+    return;
+  }
+
+  scrollGridFrame = window.requestAnimationFrame(updateScrollGrid);
+}
+
 function handlePendingScroll() {
   const pendingTarget = window.sessionStorage.getItem(pendingScrollKey);
   const hashTarget = window.location.hash ? window.location.hash.slice(1) : "";
@@ -57,11 +105,237 @@ function handlePendingScroll() {
   });
 }
 
+function hasSupabaseConfig() {
+  return (
+    typeof supabaseConfig.url === "string" &&
+    typeof supabaseConfig.anonKey === "string" &&
+    supabaseConfig.url.startsWith("https://") &&
+    !supabaseConfig.url.includes("YOUR_PROJECT_REF") &&
+    !supabaseConfig.anonKey.includes("YOUR_SUPABASE_ANON_KEY")
+  );
+}
+
+function getSupabaseClient() {
+  if (supabaseClient) {
+    return supabaseClient;
+  }
+
+  if (!hasSupabaseConfig() || !window.supabase) {
+    return null;
+  }
+
+  supabaseClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
+  return supabaseClient;
+}
+
+function setAuthMessage(root, message, status = "") {
+  const messageEl = root.querySelector("[data-auth-message]");
+
+  if (!messageEl) {
+    return;
+  }
+
+  messageEl.textContent = message;
+  messageEl.classList.toggle("is-error", status === "error");
+  messageEl.classList.toggle("is-success", status === "success");
+}
+
+function updateAuthMode(root, nextMode) {
+  authMode = nextMode;
+
+  const isSignup = authMode === "signup";
+  const title = root.querySelector("[data-auth-title]");
+  const kicker = root.querySelector("[data-auth-kicker]");
+  const submit = root.querySelector("[data-auth-submit]");
+  const password = root.querySelector('input[name="password"]');
+
+  if (title) {
+    title.textContent = isSignup ? "Create an account" : "Access your account";
+  }
+
+  if (kicker) {
+    kicker.textContent = isSignup ? "Sign up" : "Log in";
+  }
+
+  if (submit) {
+    submit.textContent = isSignup ? "Sign up" : "Log in";
+  }
+
+  if (password) {
+    password.autocomplete = isSignup ? "new-password" : "current-password";
+  }
+
+  root.querySelectorAll("[data-auth-mode-button]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.authModeButton === authMode);
+  });
+
+  setAuthMessage(root, "");
+}
+
+function openAuthPanel(root, nextMode = "login") {
+  const panel = root.querySelector("[data-auth-panel]");
+
+  updateAuthMode(root, nextMode);
+
+  if (panel) {
+    panel.hidden = false;
+  }
+
+  if (!hasSupabaseConfig()) {
+    setAuthMessage(
+      root,
+      "Supabase is wired in. Add the project URL and anon key in the page config to enable live accounts.",
+      "error"
+    );
+  }
+}
+
+function closeAuthPanel(root) {
+  const panel = root.querySelector("[data-auth-panel]");
+
+  if (panel) {
+    panel.hidden = true;
+  }
+}
+
+function renderAuthState(session) {
+  const email = session?.user?.email || "";
+
+  authRoots.forEach((root) => {
+    const loggedOut = root.querySelector("[data-auth-logged-out]");
+    const loggedIn = root.querySelector("[data-auth-logged-in]");
+    const emailEl = root.querySelector("[data-auth-email]");
+
+    if (loggedOut) {
+      loggedOut.hidden = Boolean(email);
+    }
+
+    if (loggedIn) {
+      loggedIn.hidden = !email;
+    }
+
+    if (emailEl) {
+      emailEl.textContent = email;
+    }
+
+    if (email) {
+      closeAuthPanel(root);
+    }
+  });
+}
+
+async function handleAuthSubmit(root, event) {
+  event.preventDefault();
+
+  const client = getSupabaseClient();
+  const submit = root.querySelector("[data-auth-submit]");
+  const form = event.currentTarget;
+  const formData = new FormData(form);
+  const email = String(formData.get("email") || "").trim();
+  const password = String(formData.get("password") || "");
+
+  if (!client) {
+    setAuthMessage(root, "Supabase config is missing. Add the project URL and anon key first.", "error");
+    return;
+  }
+
+  if (!email || !password) {
+    setAuthMessage(root, "Enter an email and password.", "error");
+    return;
+  }
+
+  if (submit) {
+    submit.disabled = true;
+  }
+
+  const result =
+    authMode === "signup"
+      ? await client.auth.signUp({ email, password })
+      : await client.auth.signInWithPassword({ email, password });
+
+  if (submit) {
+    submit.disabled = false;
+  }
+
+  if (result.error) {
+    setAuthMessage(root, result.error.message, "error");
+    return;
+  }
+
+  setAuthMessage(
+    root,
+    authMode === "signup" ? "Account created. You can now log in." : "Logged in.",
+    "success"
+  );
+  form.reset();
+}
+
+function initAuth() {
+  if (!authRoots.length) {
+    return;
+  }
+
+  authRoots.forEach((root) => {
+    root.querySelectorAll("[data-auth-open]").forEach((button) => {
+      button.addEventListener("click", () => {
+        openAuthPanel(root, button.dataset.authOpen || "login");
+      });
+    });
+
+    root.querySelectorAll("[data-auth-mode-button]").forEach((button) => {
+      button.addEventListener("click", () => {
+        updateAuthMode(root, button.dataset.authModeButton || "login");
+      });
+    });
+
+    root.querySelector("[data-auth-close]")?.addEventListener("click", () => closeAuthPanel(root));
+    root.querySelector("[data-auth-form]")?.addEventListener("submit", (event) => {
+      handleAuthSubmit(root, event);
+    });
+
+    root.querySelector("[data-auth-sign-out]")?.addEventListener("click", async () => {
+      const client = getSupabaseClient();
+
+      if (!client) {
+        renderAuthState(null);
+        return;
+      }
+
+      await client.auth.signOut();
+      renderAuthState(null);
+    });
+
+    updateAuthMode(root, authMode);
+  });
+
+  const client = getSupabaseClient();
+
+  if (!client) {
+    renderAuthState(null);
+    return;
+  }
+
+  client.auth.getSession().then(({ data }) => {
+    renderAuthState(data.session);
+  });
+
+  client.auth.onAuthStateChange((_event, session) => {
+    renderAuthState(session);
+  });
+}
+
 if (navToggle && navLinks) {
   navToggle.addEventListener("click", () => {
     const isOpen = navLinks.classList.toggle("is-open");
     navToggle.setAttribute("aria-expanded", String(isOpen));
   });
+}
+
+window.addEventListener("scroll", requestScrollGridUpdate, { passive: true });
+window.addEventListener("resize", requestScrollGridUpdate);
+
+if (typeof reduceMotion.addEventListener === "function") {
+  reduceMotion.addEventListener("change", requestScrollGridUpdate);
 }
 
 samePageScrollLinks.forEach((link) => {
@@ -114,3 +388,5 @@ if (revealBlocks.length || revealItems.length) {
 }
 
 handlePendingScroll();
+updateScrollGrid();
+initAuth();
