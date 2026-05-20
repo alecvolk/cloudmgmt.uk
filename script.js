@@ -5,10 +5,13 @@ const samePageScrollLinks = document.querySelectorAll("[data-scroll-target]");
 const crossPageScrollLinks = document.querySelectorAll("[data-route-scroll]");
 const revealBlocks = document.querySelectorAll("[data-reveal]");
 const revealItems = document.querySelectorAll("[data-reveal-item]");
-const authRoots = document.querySelectorAll("[data-auth-root]");
+let authRoots = document.querySelectorAll("[data-auth-root]");
 const scrollOffset = 96;
 const pendingScrollKey = "cloudmgmt-scroll-target";
-const supabaseConfig = window.CLOUDMGMT_SUPABASE || {};
+const supabaseConfig = window.CLOUDMGMT_SUPABASE || {
+  url: "https://YOUR_PROJECT_REF.supabase.co",
+  anonKey: "YOUR_SUPABASE_ANON_KEY",
+};
 let scrollGridFrame = 0;
 let authMode = "login";
 let supabaseClient = null;
@@ -103,6 +106,75 @@ function handlePendingScroll() {
     scrollToTarget(targetId);
     clearHashFromAddress();
   });
+}
+
+function ensureAuthAssetsAndMarkup() {
+  if (!document.querySelector('link[href$="auth-grid.css"]')) {
+    const authStyles = document.createElement("link");
+    authStyles.rel = "stylesheet";
+    authStyles.href = "/auth-grid.css";
+    document.head.appendChild(authStyles);
+  }
+
+  if (!window.CLOUDMGMT_SUPABASE) {
+    window.CLOUDMGMT_SUPABASE = supabaseConfig;
+  }
+
+  if (!window.supabase && !document.querySelector('script[src*="supabase-js"]')) {
+    const supabaseScript = document.createElement("script");
+    supabaseScript.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+    supabaseScript.defer = true;
+    document.head.appendChild(supabaseScript);
+  }
+
+  document.querySelectorAll("[data-nav-links]").forEach((links) => {
+    if (links.querySelector("[data-auth-root]")) {
+      return;
+    }
+
+    links.insertAdjacentHTML(
+      "beforeend",
+      `
+          <div class="auth-shell" data-auth-root>
+            <div class="auth-actions" data-auth-logged-out>
+              <button class="auth-link" type="button" data-auth-open="login">Log in</button>
+              <button class="auth-button" type="button" data-auth-open="signup">Sign up</button>
+            </div>
+            <div class="auth-user" data-auth-logged-in hidden>
+              <span data-auth-email></span>
+              <button class="auth-link" type="button" data-auth-sign-out>Log out</button>
+            </div>
+            <div class="auth-panel" data-auth-panel hidden>
+              <div class="auth-panel-header">
+                <div>
+                  <p class="auth-kicker" data-auth-kicker>Log in</p>
+                  <strong data-auth-title>Access your account</strong>
+                </div>
+                <button class="auth-close" type="button" aria-label="Close login form" data-auth-close></button>
+              </div>
+              <div class="auth-mode-toggle" role="group" aria-label="Authentication mode">
+                <button type="button" data-auth-mode-button="login">Log in</button>
+                <button type="button" data-auth-mode-button="signup">Sign up</button>
+              </div>
+              <form class="auth-form" data-auth-form>
+                <label>
+                  <span>Email</span>
+                  <input type="email" name="email" autocomplete="email" required />
+                </label>
+                <label>
+                  <span>Password</span>
+                  <input type="password" name="password" autocomplete="current-password" minlength="6" required />
+                </label>
+                <button class="button" type="submit" data-auth-submit>Log in</button>
+              </form>
+              <p class="auth-message" data-auth-message role="status"></p>
+            </div>
+          </div>
+      `
+    );
+  });
+
+  authRoots = document.querySelectorAll("[data-auth-root]");
 }
 
 function hasSupabaseConfig() {
@@ -389,4 +461,5 @@ if (revealBlocks.length || revealItems.length) {
 
 handlePendingScroll();
 updateScrollGrid();
+ensureAuthAssetsAndMarkup();
 initAuth();
