@@ -9,6 +9,7 @@
     />
     <title>2026 Applications Closed | cloud management</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="auth-grid.css" />
   </head>
   <body class="application-page">
     <header class="site-header">
@@ -25,10 +26,42 @@
         </button>
 
         <div class="nav-links" data-nav-links>
-          <a href="/" data-route-scroll="services">Services</a>
-          <a href="/" data-route-scroll="results">Results</a>
-          <a href="/" data-route-scroll="process">Process</a>
-          <a class="button button-small" href="/">Applications Closed</a>
+          <a href="/case-study/">Case Study</a>
+          <a class="button button-small" href="/application">Apply Now</a>
+          <div class="auth-shell" data-auth-root>
+            <div class="auth-actions" data-auth-logged-out>
+              <button class="auth-link" type="button" data-auth-open="login">Log in</button>
+              <button class="auth-button" type="button" data-auth-open="signup">Sign up</button>
+            </div>
+            <div class="auth-user" data-auth-logged-in hidden>
+              <button class="auth-button auth-button-muted" type="button" disabled>Logged In</button>
+            </div>
+            <div class="auth-panel" data-auth-panel hidden>
+              <div class="auth-panel-header">
+                <div>
+                  <p class="auth-kicker" data-auth-kicker>Log in</p>
+                  <strong data-auth-title>Access your account</strong>
+                </div>
+                <button class="auth-close" type="button" aria-label="Close login form" data-auth-close></button>
+              </div>
+              <div class="auth-mode-toggle" role="group" aria-label="Authentication mode">
+                <button type="button" data-auth-mode-button="login">Log in</button>
+                <button type="button" data-auth-mode-button="signup">Sign up</button>
+              </div>
+              <form class="auth-form" data-auth-form>
+                <label>
+                  <span>Email</span>
+                  <input type="email" name="email" autocomplete="email" required />
+                </label>
+                <label>
+                  <span>Password</span>
+                  <input type="password" name="password" autocomplete="current-password" minlength="6" required />
+                </label>
+                <button class="button" type="submit" data-auth-submit>Log in</button>
+              </form>
+              <p class="auth-message" data-auth-message role="status"></p>
+            </div>
+          </div>
         </div>
       </nav>
     </header>
@@ -89,6 +122,13 @@
       </div>
     </footer>
 
+    <script>
+      window.CLOUDMGMT_SUPABASE = {
+        url: "https://zzsnnbpzncnhdsludhet.supabase.co",
+        anonKey: "sb_publishable_lIlj5ER0FDbkPoa2vWVP4w_L2CqnMoY",
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
   </body>
 </html>
