@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 430" role="img" aria-labelledby="title desc">
+  <title id="title">Monthly audience and subscribers chart</title>
+  <desc id="desc">An anonymized March 2026 performance chart showing 11.9m monthly audience and plus 463.2k subscribers.</desc>
+  <rect width="1600" height="430" rx="26" fill="#202121"/>
+  <rect x="800" width="800" height="142" fill="#191919"/>
+  <line x1="800" y1="0" x2="800" y2="142" stroke="#474b50" stroke-width="2"/>
+  <text x="400" y="42" fill="#a8abad" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="middle">Monthly audience</text>
+  <text x="400" y="84" fill="#f4f6f8" font-family="Arial, Helvetica, sans-serif" font-size="44" text-anchor="middle">11.9m</text>
+  <text x="1200" y="42" fill="#a8abad" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="middle">Subscribers</text>
+  <text x="1174" y="84" fill="#f4f6f8" font-family="Arial, Helvetica, sans-serif" font-size="44" text-anchor="middle">+463.2k</text>
+  <circle cx="1275" cy="70" r="18" fill="#39b54a"/>
+  <path d="M1275 82V59M1264 69l11-11 11 11" fill="none" stroke="#102914" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1200" y="118" fill="#a6a7a9" font-family="Arial, Helvetica, sans-serif" font-size="21" font-style="italic" text-anchor="middle">&gt;999% more than 29 Jan - 28 Feb 2026</text>
+  <g stroke="#3a3d40" stroke-width="1.5">
+    <line x1="32" y1="220" x2="1508" y2="220"/>
+    <line x1="32" y1="270" x2="1508" y2="270"/>
+    <line x1="32" y1="320" x2="1508" y2="320"/>
+  </g>
+  <line x1="32" y1="370" x2="1508" y2="370" stroke="#8c8f92" stroke-width="2"/>
+  <polyline points="32,370 450,370 560,366 615,345 668,326 720,319 776,311 875,282 960,271 1042,263 1092,250 1188,219 1296,213 1420,206 1508,206" fill="none" stroke="#a855f7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#a3a5a8" font-family="Arial, Helvetica, sans-serif" font-size="20">
+    <text x="32" y="406">1 Mar 2026</text>
+    <text x="276" y="406">6 Mar 2026</text>
+    <text x="520" y="406">11 Mar 2026</text>
+    <text x="766" y="406">16 Mar 2026</text>
+    <text x="1016" y="406">21 Mar 2026</text>
+    <text x="1264" y="406">26 Mar 2026</text>
+    <text x="1450" y="406">31 Mar 2026</text>
+  </g>
+  <g fill="#a3a5a8" font-family="Arial, Helvetica, sans-serif" font-size="20">
+    <text x="1536" y="225">12.0m</text>
+    <text x="1536" y="275">8.0m</text>
+    <text x="1536" y="325">4.0m</text>
+    <text x="1536" y="374">0</text>
+  </g>
+</svg>
