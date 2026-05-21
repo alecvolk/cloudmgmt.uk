@@ -67,6 +67,15 @@ body::before {
   border-radius: 8px;
 }
 
+.auth-button-muted {
+  color: var(--muted);
+  cursor: default;
+}
+
+.auth-button:disabled {
+  opacity: 1;
+}
+
 .auth-user span {
   max-width: 170px;
   overflow: hidden;
