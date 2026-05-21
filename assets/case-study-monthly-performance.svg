@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 570" role="img" aria-labelledby="title desc">
+  <title id="title">Monthly views, watch time, and subscribers chart</title>
+  <desc id="desc">An anonymized March 2026 performance chart showing 31.9m views, 4.1m watch hours, and plus 463.2k subscribers.</desc>
+  <rect width="1200" height="570" rx="22" fill="#202121"/>
+  <rect x="400" width="400" height="150" fill="#191919"/>
+  <rect x="800" width="400" height="150" fill="#191919"/>
+  <g stroke="#474b50" stroke-width="2">
+    <line x1="400" y1="0" x2="400" y2="150"/>
+    <line x1="800" y1="0" x2="800" y2="150"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <text x="200" y="48" fill="#a8abad" font-size="25" font-weight="700">Views</text>
+    <text x="172" y="98" fill="#f4f6f8" font-size="48">31.9m</text>
+    <text x="600" y="48" fill="#a8abad" font-size="25" font-weight="700">Watch time (hours)</text>
+    <text x="572" y="98" fill="#f4f6f8" font-size="48">4.1m</text>
+    <text x="1000" y="48" fill="#a8abad" font-size="25" font-weight="700">Subscribers</text>
+    <text x="970" y="98" fill="#f4f6f8" font-size="48">+463.2k</text>
+    <text x="200" y="137" fill="#a6a7a9" font-size="21" font-style="italic">&gt;999% more than 29 Jan - 28 Feb 2026</text>
+    <text x="600" y="137" fill="#a6a7a9" font-size="21" font-style="italic">&gt;999% more than 29 Jan - 28 Feb 2026</text>
+    <text x="1000" y="137" fill="#a6a7a9" font-size="21" font-style="italic">&gt;999% more than 29 Jan - 28 Feb 2026</text>
+  </g>
+  <g fill="#39b54a">
+    <circle cx="260" cy="84" r="18"/>
+    <circle cx="662" cy="84" r="18"/>
+    <circle cx="1088" cy="84" r="18"/>
+  </g>
+  <g fill="none" stroke="#102914" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M260 96V73M249 83l11-11 11 11"/>
+    <path d="M662 96V73M651 83l11-11 11 11"/>
+    <path d="M1088 96V73M1077 83l11-11 11 11"/>
+  </g>
+  <g stroke="#3a3d40" stroke-width="1.5">
+    <line x1="45" y1="282" x2="1200" y2="282"/>
+    <line x1="45" y1="352" x2="1200" y2="352"/>
+    <line x1="45" y1="422" x2="1200" y2="422"/>
+  </g>
+  <line x1="45" y1="493" x2="1200" y2="493" stroke="#8c8f92" stroke-width="2"/>
+  <path d="M45 493H270l110-10 50-8 46-118 48-84 46 150 48 48 49-27 48-94 49-26 47 122 48 37 48-5 49-82 49-55 48 3 48 120" fill="#24373d" opacity=".74"/>
+  <polyline points="45,493 270,493 380,483 430,475 476,357 524,273 570,423 618,471 667,444 715,350 764,324 811,446 859,483 907,478 956,396 1005,341 1053,344 1101,464" fill="none" stroke="#48b9e5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#a3a5a8" font-family="Arial, Helvetica, sans-serif" font-size="22">
+    <text x="45" y="540">1 Mar 2026</text>
+    <text x="250" y="540">6 Mar 2026</text>
+    <text x="500" y="540">11 Mar 2026</text>
+    <text x="742" y="540">16 Mar 2026</text>
+    <text x="960" y="540">21 Mar 2026</text>
+  </g>
+</svg>
