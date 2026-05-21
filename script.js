@@ -108,6 +108,42 @@ function handlePendingScroll() {
   });
 }
 
+function normalizeHeaderNav() {
+  document.querySelectorAll("[data-nav-links]").forEach((links) => {
+    links.querySelectorAll("[data-scroll-target], [data-route-scroll]").forEach((link) => {
+      link.remove();
+    });
+
+    links.querySelectorAll("a").forEach((link) => {
+      if (link.textContent.trim() === "Applications Closed") {
+        link.remove();
+      }
+    });
+
+    let caseStudyLink = links.querySelector('a[href="/case-study/"]');
+
+    if (!caseStudyLink) {
+      caseStudyLink = document.createElement("a");
+      caseStudyLink.href = "/case-study/";
+      caseStudyLink.textContent = "Case Study";
+    }
+
+    let applyLink = links.querySelector('a[href="/application"], a[href="/application/"]');
+
+    if (!applyLink) {
+      applyLink = document.createElement("a");
+      applyLink.className = "button button-small";
+    }
+
+    applyLink.href = "/application";
+    applyLink.textContent = "Apply Now";
+    applyLink.classList.add("button", "button-small");
+
+    links.prepend(caseStudyLink);
+    caseStudyLink.insertAdjacentElement("afterend", applyLink);
+  });
+}
+
 function ensureAuthAssetsAndMarkup() {
   if (!document.querySelector('link[href$="auth-grid.css"]')) {
     const authStyles = document.createElement("link");
@@ -141,8 +177,7 @@ function ensureAuthAssetsAndMarkup() {
               <button class="auth-button" type="button" data-auth-open="signup">Sign up</button>
             </div>
             <div class="auth-user" data-auth-logged-in hidden>
-              <span data-auth-email></span>
-              <button class="auth-link" type="button" data-auth-sign-out>Log out</button>
+              <button class="auth-button auth-button-muted" type="button" disabled>Logged In</button>
             </div>
             <div class="auth-panel" data-auth-panel hidden>
               <div class="auth-panel-header">
@@ -175,6 +210,14 @@ function ensureAuthAssetsAndMarkup() {
   });
 
   authRoots = document.querySelectorAll("[data-auth-root]");
+
+  authRoots.forEach((root) => {
+    const loggedIn = root.querySelector("[data-auth-logged-in]");
+
+    if (loggedIn) {
+      loggedIn.innerHTML = '<button class="auth-button auth-button-muted" type="button" disabled>Logged In</button>';
+    }
+  });
 }
 
 function hasSupabaseConfig() {
@@ -276,7 +319,6 @@ function renderAuthState(session) {
   authRoots.forEach((root) => {
     const loggedOut = root.querySelector("[data-auth-logged-out]");
     const loggedIn = root.querySelector("[data-auth-logged-in]");
-    const emailEl = root.querySelector("[data-auth-email]");
 
     if (loggedOut) {
       loggedOut.hidden = Boolean(email);
@@ -284,10 +326,6 @@ function renderAuthState(session) {
 
     if (loggedIn) {
       loggedIn.hidden = !email;
-    }
-
-    if (emailEl) {
-      emailEl.textContent = email;
     }
 
     if (email) {
@@ -336,7 +374,7 @@ async function handleAuthSubmit(root, event) {
 
   setAuthMessage(
     root,
-    authMode === "signup" ? "Account created. You can now log in." : "Logged in.",
+    authMode === "signup" ? "Check your email to confirm your account." : "Logged in.",
     "success"
   );
   form.reset();
@@ -363,18 +401,6 @@ function initAuth() {
     root.querySelector("[data-auth-close]")?.addEventListener("click", () => closeAuthPanel(root));
     root.querySelector("[data-auth-form]")?.addEventListener("submit", (event) => {
       handleAuthSubmit(root, event);
-    });
-
-    root.querySelector("[data-auth-sign-out]")?.addEventListener("click", async () => {
-      const client = getSupabaseClient();
-
-      if (!client) {
-        renderAuthState(null);
-        return;
-      }
-
-      await client.auth.signOut();
-      renderAuthState(null);
     });
 
     updateAuthMode(root, authMode);
@@ -461,5 +487,6 @@ if (revealBlocks.length || revealItems.length) {
 
 handlePendingScroll();
 updateScrollGrid();
+normalizeHeaderNav();
 ensureAuthAssetsAndMarkup();
 initAuth();
